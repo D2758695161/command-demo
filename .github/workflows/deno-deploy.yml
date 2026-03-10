@@ -17,8 +17,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - name: Generate manifest
-        run: bunx @ubiquity-os/plugin-manifest-tool@latest
+      - name: Install dependencies and generate manifest
+        run: bun install --frozen-lockfile
       - uses: ubiquity-os/deno-plugin-adapter@main
         id: adapter
         with:
