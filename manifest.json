@@ -7,10 +7,11 @@
     "issue_comment.created",
     "issues.labeled"
   ],
-  "skipBotEvents": false,
+  "skipBotEvents": true,
   "configuration": {
     "default": {},
     "type": "object",
     "properties": {}
-  }
+  },
+  "homepage_url": "https://command-demo-development.deno.dev"
 }
