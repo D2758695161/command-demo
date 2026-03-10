@@ -1,0 +1,17 @@
+{
+  "name": "plugin-template",
+  "short_name": "ubiquity-os/command-demo@demo",
+  "description": "Ubiquity-os demo plugin.",
+  "ubiquity:listeners": [
+    "issue_comment.edited",
+    "issue_comment.created",
+    "issues.labeled"
+  ],
+  "skipBotEvents": true,
+  "configuration": {
+    "default": {},
+    "type": "object",
+    "properties": {}
+  },
+  "homepage_url": "https://command-demo-demo.deno.dev"
+}
