@@ -16,6 +16,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - name: Generate manifest
+        run: bunx @ubiquity-os/plugin-manifest-tool@latest
       - uses: ubiquity-os/deno-plugin-adapter@main
         id: adapter
         with:
