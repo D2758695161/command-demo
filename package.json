@@ -20,7 +20,9 @@
     "format:cspell": "cspell **/*",
     "knip": "knip --config .github/knip.ts",
     "knip-ci": "knip --no-exit-code --reporter json --config .github/knip.ts",
-    "prepare": "husky install",
+    "prepare": "bun run prepare:manifest && husky install",
+    "prepare:manifest": "bunx @ubiquity-os/plugin-manifest-tool@latest",
+    "prebuild": "bun run prepare:manifest",
     "jest:test": "jest --coverage",
     "worker": "wrangler dev --env dev --port 4000"
   },
