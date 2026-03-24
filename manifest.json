@@ -12,5 +12,6 @@
     "default": {},
     "type": "object",
     "properties": {}
-  }
+  },
+  "homepage_url": "https://command-demo-demo.deno.dev"
 }
