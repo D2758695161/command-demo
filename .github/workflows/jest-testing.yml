@@ -15,14 +15,14 @@ jobs:
         with:
           bun-version: latest
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Jest With Coverage
         run: |
           bun install --frozen-lockfile
-          bun run test
+          bun run jest:test
 
       - name: Add Jest Report to Summary
         if: always()
