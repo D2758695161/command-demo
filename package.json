@@ -23,7 +23,8 @@
     "prepare": "bun run prepare:manifest && husky install",
     "prepare:manifest": "bunx @ubiquity-os/plugin-manifest-tool@latest",
     "prebuild": "bun run prepare:manifest",
-    "test": "cross-env NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" jest --setupFiles dotenv/config --coverage",
+    "jest:test": "jest --coverage",
+    "test": "jest --coverage",
     "worker": "wrangler dev --env dev --port 4000"
   },
   "keywords": [
@@ -34,12 +35,10 @@
     "open-source"
   ],
   "dependencies": {
-    "@sinclair/typebox": "0.34.15",
-    "@ubiquity-os/plugin-sdk": "^3.1.4",
+    "@sinclair/typebox": "0.34.41",
+    "@ubiquity-os/plugin-sdk": "^3.8.1",
     "@ubiquity-os/ubiquity-os-logger": "^1.4.0",
-    "dotenv": "16.4.7",
-    "hono": "^4.6.19",
-    "ts-node": "^10.9.2"
+    "hono": "^4.11.3"
   },
   "devDependencies": {
     "@commitlint/cli": "19.6.1",
@@ -50,10 +49,11 @@
     "@eslint/js": "9.19.0",
     "@jest/globals": "29.7.0",
     "@mswjs/data": "0.16.2",
+    "@swc/jest": "^0.2.39",
     "@types/jest": "^29.5.14",
     "@types/node": "22.12.0",
-    "cross-env": "^7.0.3",
     "cspell": "8.17.3",
+    "dotenv": "^17.2.3",
     "eslint": "9.19.0",
     "eslint-plugin-check-file": "3.0.0",
     "eslint-plugin-sonarjs": "3.0.1",
@@ -65,7 +65,7 @@
     "lint-staged": "15.4.3",
     "npm-run-all": "4.1.5",
     "prettier": "3.4.2",
-    "ts-jest": "29.2.5",
+    "ts-node": "^10.9.2",
     "typescript": "5.6.2",
     "typescript-eslint": "8.22.0",
     "wrangler": "3.102.0"
@@ -83,5 +83,8 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
+  },
+  "resolutions": {
+    "@sinclair/typebox": "0.34.41"
   }
 }
