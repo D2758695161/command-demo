@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.1](https://github.com/ubiquity-os/command-demo/compare/v1.0.0...v1.0.1) (2026-03-24)
+
+
+### Bug Fixes
+
+* **ci:** generate manifest before deno deploy ([f48c225](https://github.com/ubiquity-os/command-demo/commit/f48c225be3aeede055a6863190438333ef05bc97))
+* **ci:** install dependencies before deno deploy manifest step ([7402f28](https://github.com/ubiquity-os/command-demo/commit/7402f28754b16ca435461b83cb9f85a62c24d797))
+* **ci:** restore plugin-specific deploy env vars ([babe993](https://github.com/ubiquity-os/command-demo/commit/babe99300e742b7c3b67b9e0174913ee24bea45c))
+
 ## 1.0.0 (2025-11-24)
 
 
