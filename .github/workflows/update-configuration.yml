@@ -122,7 +122,7 @@ jobs:
         with:
           pluginEntry: "./worker"
 
-      - uses: ubiquity-os/deno-deploy@main
+      - uses: ubiquity-os/deno-deploy@issue-17-deno-deploy-app-migration
         if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && needs.resolve_source_ref.outputs.is_tag_ref != 'true' && needs.resolve_source_ref.outputs.is_artifact_ref != 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

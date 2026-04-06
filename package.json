@@ -36,7 +36,7 @@
   ],
   "dependencies": {
     "@sinclair/typebox": "0.34.41",
-    "@ubiquity-os/plugin-sdk": "^3.8.1",
+    "@ubiquity-os/plugin-sdk": "3.12.5",
     "@ubiquity-os/ubiquity-os-logger": "^1.4.0",
     "hono": "^4.11.3"
   },
