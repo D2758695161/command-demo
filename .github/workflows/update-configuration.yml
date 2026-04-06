@@ -47,48 +47,6 @@ jobs:
       EXCLUDE_SUPPORTED_EVENTS: ${{ github.event_name == 'workflow_dispatch' && inputs.exclude_supported_events || vars.EXCLUDE_SUPPORTED_EVENTS || '' }}
 
     steps:
-      - name: Resolve source ref
-        id: refs
-        shell: bash
-        run: |
-          source_ref="$(echo '${{ github.event.ref || github.event.workflow_run.head_branch || github.ref }}' | sed 's#refs/heads/##' | sed 's#refs/tags/##')"
-          if [[ -z "$source_ref" ]]; then
-            source_ref="${GITHUB_REF_NAME}"
-          fi
-
-          is_tag_ref="false"
-          if [[ "${{ github.event.ref_type || '' }}" == "tag" ]] || [[ "${GITHUB_REF:-}" == refs/tags/* ]]; then
-            is_tag_ref="true"
-          fi
-
-          is_artifact_ref="false"
-          if [[ "$source_ref" == dist/* ]]; then
-            is_artifact_ref="true"
-          fi
-
-          if [[ "$BUILD_ACTION_ENABLED" == "true" ]]; then
-            action_ref_branch="dist/${source_ref}"
-          else
-            action_ref_branch="${source_ref}"
-          fi
-
-          echo "source_ref=$source_ref" >> "$GITHUB_OUTPUT"
-          echo "is_tag_ref=$is_tag_ref" >> "$GITHUB_OUTPUT"
-          echo "is_artifact_ref=$is_artifact_ref" >> "$GITHUB_OUTPUT"
-          echo "ACTION_REF=${GITHUB_REPOSITORY}@${action_ref_branch}" >> "$GITHUB_ENV"
-
-      - name: Print deployment mode
-        shell: bash
-        run: |
-          echo "BUILD_ACTION_ENABLED=${BUILD_ACTION_ENABLED}"
-          echo "DEPLOY_DENO_ENABLED=${DEPLOY_DENO_ENABLED}"
-          echo "SKIP_BOT_EVENTS=${SKIP_BOT_EVENTS}"
-          echo "EXCLUDE_SUPPORTED_EVENTS=${EXCLUDE_SUPPORTED_EVENTS}"
-          echo "SOURCE_REF=${{ steps.refs.outputs.source_ref }}"
-          echo "IS_ARTIFACT_REF=${{ steps.refs.outputs.is_artifact_ref }}"
-          echo "IS_TAG_REF=${{ steps.refs.outputs.is_tag_ref }}"
-          echo "ACTION_REF=${ACTION_REF}"
-
       - name: Publish action artifact branch
         if: ${{ env.BUILD_ACTION_ENABLED == 'true' }}
         uses: ubiquity-os/action-deploy-plugin@main
@@ -104,49 +62,45 @@ jobs:
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Check out the repository
-        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && steps.refs.outputs.is_tag_ref != 'true' && steps.refs.outputs.is_artifact_ref != 'true' }}
+        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && github.event_name != 'delete' && github.event.ref_type != 'tag' && !startsWith(github.ref, 'refs/tags/') && !startsWith(github.event.workflow_run.head_branch || github.ref_name, 'dist/') }}
         uses: actions/checkout@v6
 
       - name: Set up Deno
-        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && steps.refs.outputs.is_tag_ref != 'true' && steps.refs.outputs.is_artifact_ref != 'true' }}
+        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && github.event_name != 'delete' && github.event.ref_type != 'tag' && !startsWith(github.ref, 'refs/tags/') && !startsWith(github.event.workflow_run.head_branch || github.ref_name, 'dist/') }}
         uses: denoland/setup-deno@v2
         with:
           deno-version: v2.x
 
       - name: Install dependencies
-        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && steps.refs.outputs.is_tag_ref != 'true' && steps.refs.outputs.is_artifact_ref != 'true' && github.event_name != 'delete' }}
+        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && github.event_name != 'delete' && github.event.ref_type != 'tag' && !startsWith(github.ref, 'refs/tags/') && !startsWith(github.event.workflow_run.head_branch || github.ref_name, 'dist/') }}
         run: deno install --node-modules-dir=auto --no-lock
 
       - name: Generate manifest for deploy
-        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && steps.refs.outputs.is_tag_ref != 'true' && steps.refs.outputs.is_artifact_ref != 'true' && github.event_name != 'delete' }}
+        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && github.event_name != 'delete' && github.event.ref_type != 'tag' && !startsWith(github.ref, 'refs/tags/') && !startsWith(github.event.workflow_run.head_branch || github.ref_name, 'dist/') }}
         run: deno x -A -y --no-lock npm:@ubiquity-os/plugin-manifest-tool@latest
         env:
           SKIP_BOT_EVENTS: ${{ env.SKIP_BOT_EVENTS }}
           EXCLUDE_SUPPORTED_EVENTS: ${{ env.EXCLUDE_SUPPORTED_EVENTS }}
-          GITHUB_REF_NAME: ${{ steps.refs.outputs.source_ref }}
+          GITHUB_REF_NAME: ${{ github.event.workflow_run.head_branch || github.ref_name }}
 
       - uses: ubiquity-os/deno-plugin-adapter@main
-        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && steps.refs.outputs.is_tag_ref != 'true' && steps.refs.outputs.is_artifact_ref != 'true' && github.event_name != 'delete' }}
+        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && github.event_name != 'delete' && github.event.ref_type != 'tag' && !startsWith(github.ref, 'refs/tags/') && !startsWith(github.event.workflow_run.head_branch || github.ref_name, 'dist/') }}
         id: adapter
         with:
           pluginEntry: "./worker"
 
       - uses: ubiquity-os/deno-deploy@main
-        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && steps.refs.outputs.is_tag_ref != 'true' && steps.refs.outputs.is_artifact_ref != 'true' }}
+        if: ${{ env.DEPLOY_DENO_ENABLED == 'true' && github.event.ref_type != 'tag' && !startsWith(github.ref, 'refs/tags/') && !startsWith(github.event.workflow_run.head_branch || github.ref_name, 'dist/') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           KERNEL_PUBLIC_KEY: ${{ secrets.KERNEL_PUBLIC_KEY }}
           APP_ID: ${{ secrets.APP_ID }}
           APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
           APP_INSTALLATION_ID: ${{ secrets.APP_INSTALLATION_ID }}
-          ACTION_REF: ${{ env.ACTION_REF }}
           LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
           USER_GITHUB_TOKEN: ${{ secrets.USER_GITHUB_TOKEN }}
         with:
           token: ${{ secrets.DENO_DEPLOY_TOKEN }}
-          action: ${{ github.event_name == 'delete' && 'delete' || 'deploy' }}
-          organization: ${{ secrets.DENO_ORG_NAME }}
+          action: ${{ github.event_name == 'delete' && 'delete' || 'provision' }}
+          app: ${{ secrets.DENO_PROJECT_NAME }}
           entrypoint: ${{ github.event_name == 'delete' && 'src/deno.ts' || steps.adapter.outputs.entrypoint }}
-          project_name: ${{ secrets.DENO_PROJECT_NAME }}
-          sourceRef: ${{ steps.refs.outputs.source_ref }}
-          artifactPrefix: dist/
