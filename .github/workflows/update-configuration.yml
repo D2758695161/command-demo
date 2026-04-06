@@ -133,7 +133,7 @@ jobs:
           LOG_LEVEL: ${{ secrets.LOG_LEVEL }}
           USER_GITHUB_TOKEN: ${{ secrets.USER_GITHUB_TOKEN }}
         with:
-          token: ${{ secrets.DENO_DEPLOY_TOKEN }}
+          token: ${{ secrets.DENO_2_DEPLOY_TOKEN }}
           action: ${{ github.event_name == 'delete' && 'delete' || 'provision' }}
           app: ${{ secrets.DENO_PROJECT_NAME }}
           entrypoint: ${{ github.event_name == 'delete' && 'src/deno.ts' || steps.adapter.outputs.entrypoint }}
