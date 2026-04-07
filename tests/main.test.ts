@@ -3,7 +3,7 @@ import { drop } from "@mswjs/data";
 import { CommentHandler } from "@ubiquity-os/plugin-sdk";
 import { customOctokit as Octokit } from "@ubiquity-os/plugin-sdk/octokit";
 import { Logs } from "@ubiquity-os/ubiquity-os-logger";
-import manifest from "../manifest.json";
+import manifest from "../manifest.json" with { type: "json" };
 import { runPlugin } from "../src";
 import { Context, Env } from "../src/types/index";
 import { db } from "./__mocks__/db";
