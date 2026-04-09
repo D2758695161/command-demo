@@ -23,8 +23,7 @@
     "prepare": "bun run prepare:manifest && husky install",
     "prepare:manifest": "bun x @ubiquity-os/plugin-manifest-tool@latest",
     "prebuild": "bun run prepare:manifest",
-    "jest:test": "jest --coverage",
-    "test": "jest --coverage",
+    "jest:test": "jest --setupFiles dotenv/config --coverage",
     "worker": "wrangler dev --env dev --port 4000"
   },
   "keywords": [
