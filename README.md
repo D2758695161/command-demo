@@ -1,4 +1,4 @@
-# `@ubiquity-os/plugin-demo`
+# `@ubiquity-os/command-demo`
 
 ## Prerequisites
 
@@ -25,10 +25,10 @@
 
 ```yml
 plugins:
-  - name: plugin-demo
-    id: plugin-demo
+  - name: command-demo
+    id: command-demo
     uses:
-      - plugin: https://ubiquity-os-plugin-demo-main.ubiquity.workers.dev
+      - plugin: https://ubiquity-os-command-demo-main.ubiquity.workers.dev
         with:
           userName: "ubiquity-os-simulant"
 ```
