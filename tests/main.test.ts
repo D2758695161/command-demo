@@ -34,7 +34,7 @@ describe("Plugin tests", () => {
       USER_GITHUB_TOKEN: "",
     });
     const content = await response.json();
-    expect(content).toEqual(manifest);
+    expect(content).toEqual({ ...manifest, homepage_url: "http://localhost" });
   });
 
   it("Should handle an issue comment event", async () => {
