@@ -42,7 +42,7 @@ jobs:
     env:
       BUILD_ACTION_ENABLED: ${{ github.event_name == 'workflow_dispatch' && inputs.build_action_enabled || vars.BUILD_ACTION_ENABLED || 'true' }}
       DEPLOY_DENO_ENABLED: ${{ github.event_name == 'workflow_dispatch' && inputs.deploy_deno_enabled || vars.DEPLOY_DENO_ENABLED || 'true' }}
-      SKIP_BOT_EVENTS: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_bot_events || vars.SKIP_BOT_EVENTS || 'true' }}
+      SKIP_BOT_EVENTS: ${{ github.event_name == 'workflow_dispatch' && inputs.skip_bot_events || vars.SKIP_BOT_EVENTS || 'false' }}
       EXCLUDE_SUPPORTED_EVENTS: ${{ github.event_name == 'workflow_dispatch' && inputs.exclude_supported_events || vars.EXCLUDE_SUPPORTED_EVENTS || '' }}
     outputs:
       source_ref: ${{ steps.refs.outputs.source_ref }}
