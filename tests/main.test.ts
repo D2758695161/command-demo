@@ -3,7 +3,7 @@ import { drop } from "@mswjs/data";
 import { CommentHandler } from "@ubiquity-os/plugin-sdk";
 import { customOctokit as Octokit } from "@ubiquity-os/plugin-sdk/octokit";
 import { Logs } from "@ubiquity-os/ubiquity-os-logger";
-import manifest from "../manifest.json";
+import manifest from "../manifest.json" with { type: "json" };
 import { runPlugin } from "../src";
 import { Context, Env } from "../src/types/index";
 import { db } from "./__mocks__/db";
@@ -34,7 +34,7 @@ describe("Plugin tests", () => {
       USER_GITHUB_TOKEN: "",
     });
     const content = await response.json();
-    expect(content).toEqual(manifest);
+    expect(content).toEqual({ ...manifest, homepage_url: "http://localhost" });
   });
 
   it("Should handle an issue comment event", async () => {
