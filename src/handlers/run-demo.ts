@@ -86,6 +86,14 @@ When pricing is set on any GitHub Issue, they will be automatically populated in
       issue_number: issueNumber,
       body: `/start`,
     });
+
+    // Nudge user to claim their rewards after the pricing plugin posts the reward comment
+    await userOctokit.rest.issues.createComment({
+      owner,
+      repo,
+      issue_number: issueNumber,
+      body: `Your DEMO reward has been posted above! Click the link in the reward comment to claim your tokens. If you need to set up a wallet first, use \`/wallet <YOUR_ETHEREUM_ADDRESS>\` and then re-run \`/start\`.`,
+    });
   }
 }
 
@@ -170,13 +178,16 @@ async function createPullRequest({ payload, logger, userOctokit, userName }: Con
 }
 
 export async function handleInit(context: Context<"issue_comment.created">) {
-  const { payload, userOctokit, logger } = context;
+  const { payload, userOctokit, logger, userName } = context;
 
   const repo = payload.repository.name;
   const issueNumber = payload.issue.number;
   const owner = payload.repository.owner.login;
 
   logger.info("Starting demo", { owner, repo, issueNumber });
+
+  // Bot posts the demo issue on behalf of the user (privacy: user doesn't post from their account)
+  await createDemoIssue({ ...context, octokit: context.octokit, userOctokit });
 
   await userOctokit.rest.issues.createComment({
     owner,
