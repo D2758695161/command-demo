@@ -10,6 +10,7 @@ async function isUserAdmin({ payload, octokit, logger }: Context) {
     return true;
   } catch (e) {
     logger.debug(`${username} is not a member of ${payload.repository.owner.login}`, { e });
+    return false;
   }
   const permissionLevel = await octokit.rest.repos.getCollaboratorPermissionLevel({
     username,
